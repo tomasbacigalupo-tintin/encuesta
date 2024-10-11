@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Escalabilidad de tu Empresa</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: #1e1e2f;
+            color: #e0e0e0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: auto;
+            padding: 20px;
+        }
+        #app {
+            background-color: #2b2b3d;
+            width: 100%;
+            max-width: 800px;
+            padding: 40px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+            border-radius: 20px;
+            text-align: center;
+            transition: transform 0.5s ease-in-out;
+        }
+        #app:hover {
+            transform: scale(1.05);
+        }
+        #start-screen, #question-screen, #result-screen {
+            display: none;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+        #start-screen.active, #question-screen.active, #result-screen.active {
+            display: block;
+            opacity: 1;
+        }
+        .button {
+            background-color: #00bcd4;
+            color: #fff;
+            padding: 15px 25px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2em;
+            cursor: pointer;
+            margin: 20px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .button:hover {
+            background-color: #0097a7;
+            transform: scale(1.1);
+        }
+        .button:active {
+            background-color: #007c91;
+        }
+        .question {
+            font-size: 1.8em;
+            margin-bottom: 30px;
+            color: #00bcd4;
+        }
+        #progress-bar {
+            width: 100%;
+            background-color: #3a3a4f;
+            border-radius: 20px;
+            margin-bottom: 20px;
+        }
+        #progress-bar-fill {
+            height: 30px;
+            width: 0;
+            background-color: #00bcd4;
+            border-radius: 20px;
+            transition: width 0.5s ease;
+        }
+        #start-image {
+            width: 100%;
+            max-width: 600px;
+            margin-top: 30px;
+            transition: opacity 1s ease-in-out;
+            border-radius: 20px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+        }
+        #result-graphic {
+            margin-top: 20px;
+        }
+        #qr-placeholder {
+            margin-top: 20px;
+        }
+        #qr-placeholder img {
+            width: 100%;
+            max-width: 250px;
+            border-radius: 20px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s;
+        }
+        #qr-placeholder img:hover {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div id="start-screen" class="active">
+            <h1>Descubre el potencial de escalabilidad de tu empresa</h1>
+            <button class="button" onclick="startSurvey()">Comenzar</button>
+        </div>
+
+        <div id="question-screen">
+            <div id="progress-bar">
+                <div id="progress-bar-fill"></div>
+            </div>
+            <div class="question" id="question-text"></div>
+            <button class="button" onclick="answerQuestion(true)">Sí</button>
+            <button class="button" onclick="answerQuestion(false)">No</button>
+        </div>
+
+        <div id="result-screen">
+            <h2>Tu nivel de escalabilidad es del <span id="result-percentage"></span>%</h2>
+            <div id="result-graphic"></div>
+            <p>¡Estás a un paso de llevar tu empresa al siguiente nivel!</p>
+            <p>Escanea el código QR a continuación para visitar nuestro perfil de LinkedIn. Envía el código "Feria21" a nuestros mensajes de LinkedIn y gana un cupón para una auditoría gratuita.</p>
+            <div id="qr-placeholder">
+                <img src="C:\Users\Tomas\Downloads\qrlinkedingrowe.png" alt="Código QR LinkedIn">
+            </div>
+            <button class="button" onclick="contactUs()">Saber Más</button>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            "¿Tu empresa cuenta con una base de datos digital?",
+            "¿Tienes una página web corporativa?",
+            "¿Utilizas herramientas de marketing digital?",
+            "¿Estás considerando abrir una nueva sucursal?",
+            "¿Implementas soluciones en la nube?"
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        const totalQuestions = questions.length;
+
+        function startSurvey() {
+            document.getElementById('start-screen').classList.remove('active');
+            document.getElementById('question-screen').classList.add('active');
+            showQuestion();
+        }
+
+        function showQuestion() {
+            if (currentQuestionIndex < totalQuestions) {
+                document.getElementById('question-text').innerText = questions[currentQuestionIndex];
+                updateProgressBar();
+            } else {
+                showResult();
+            }
+        }
+
+        function updateProgressBar() {
+            const progressPercentage = (currentQuestionIndex / totalQuestions) * 100;
+            document.getElementById('progress-bar-fill').style.width = progressPercentage + '%';
+        }
+
+        function answerQuestion(answer) {
+            if (answer) {
+                score++;
+            }
+            currentQuestionIndex++;
+            showQuestion();
+        }
+
+        function showResult() {
+            document.getElementById('question-screen').classList.remove('active');
+            document.getElementById('result-screen').classList.add('active');
+
+            const percentage = Math.round((score / totalQuestions) * 100);
+            document.getElementById('result-percentage').innerText = percentage;
+
+            const resultGraphic = document.getElementById('result-graphic');
+            resultGraphic.innerHTML = '';
+
+            createSVGGraphic(resultGraphic, percentage);
+        }
+
+        function createSVGGraphic(container, percentage) {
+            const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            svg.setAttribute('width', '200');
+            svg.setAttribute('height', '200');
+
+            const circleBg = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            circleBg.setAttribute('cx', '100');
+            circleBg.setAttribute('cy', '100');
+            circleBg.setAttribute('r', '90');
+            circleBg.setAttribute('fill', 'none');
+            circleBg.setAttribute('stroke', '#3a3a4f');
+            circleBg.setAttribute('stroke-width', '15');
+
+            const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            circle.setAttribute('cx', '100');
+            circle.setAttribute('cy', '100');
+            circle.setAttribute('r', '90');
+            circle.setAttribute('fill', 'none');
+            circle.setAttribute('stroke', '#00bcd4');
+            circle.setAttribute('stroke-width', '15');
+            circle.setAttribute('stroke-dasharray', `${(percentage / 100) * (2 * Math.PI * 90)}, ${2 * Math.PI * 90}`);
+
+            svg.appendChild(circleBg);
+            svg.appendChild(circle);
+            container.appendChild(svg);
+        }
+
+        function contactUs() {
+            createModal('¡Gracias por tu interés! Pronto nos pondremos en contacto contigo.');
+        }
+
+        function createModal(messageText) {
+            const modal = document.createElement('div');
+            modal.style.position = 'fixed';
+            modal.style.top = '0';
+            modal.style.left = '0';
+            modal.style.width = '100%';
+            modal.style.height = '100%';
+            modal.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+            modal.style.display = 'flex';
+            modal.style.justifyContent = 'center';
+            modal.style.alignItems = 'center';
+            modal.style.opacity = '0';
+            modal.style.transition = 'opacity 0.5s ease-in-out';
+
+            const modalContent = document.createElement('div');
+            modalContent.style.backgroundColor = '#2b2b3d';
+            modalContent.style.padding = '30px';
+            modalContent.style.borderRadius = '20px';
+            modalContent.style.textAlign = 'center';
+            modalContent.style.color = '#e0e0e0';
+
+            const message = document.createElement('p');
+            message.innerText = messageText;
+
+            const qrCode = document.createElement('img');
+            qrCode.src = 'https://via.placeholder.com/200';
+            qrCode.alt = 'Código QR LinkedIn';
+            qrCode.style.marginTop = '20px';
+            qrCode.style.width = '100%';
+            qrCode.style.maxWidth = '250px';
+            qrCode.style.borderRadius = '20px';
+            qrCode.style.boxShadow = '0 4px 16px rgba(0, 0, 0, 0.5)';
+            qrCode.style.transition = 'transform 0.3s';
+            qrCode.onmouseover = () => qrCode.style.transform = 'scale(1.1)';
+            qrCode.onmouseout = () => qrCode.style.transform = 'scale(1)';
+
+            const closeButton = document.createElement('button');
+            closeButton.innerText = 'Cerrar';
+            closeButton.className = 'button';
+            closeButton.onclick = function () {
+                modal.style.opacity = '0';
+                setTimeout(() => document.body.removeChild(modal), 500);
+            };
+
+            modalContent.appendChild(message);
+            modalContent.appendChild(qrCode);
+            modalContent.appendChild(closeButton);
+            modal.appendChild(modalContent);
+            document.body.appendChild(modal);
+
+            requestAnimationFrame(() => {
+                modal.style.opacity = '1';
+            });
+        }
+    </script>
+</body>
+</html>
