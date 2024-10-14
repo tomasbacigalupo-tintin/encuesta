@@ -123,6 +123,9 @@
             <div id="result-graphic"></div>
             <p>¡Estás a un paso de llevar tu empresa al siguiente nivel!</p>
             <p>Escanea el código QR a continuación para visitar nuestro perfil de LinkedIn. Envía el código "Feria21" a nuestros mensajes de LinkedIn y gana un cupón para una auditoría gratuita.</p>
+            <div id="qr-placeholder">
+                <img src="qrlinkedingrowe.png" alt="Código QR LinkedIn">
+            </div>
             <button class="button" onclick="contactUs()">Saber Más</button>
         </div>
     </div>
@@ -132,8 +135,8 @@
             "¿Tu empresa cuenta con una base de datos digital?",
             "¿Tienes una página web corporativa?",
             "¿Conoces RPA y BPM?",
-            "¿Tenes canales de venta digitales?",
-            "¿Usas algun software de gestion?"
+            "¿Tienes canales de venta digitales?",
+            "¿Usas algún software de gestión?"
         ];
 
         let currentQuestionIndex = 0;
@@ -156,7 +159,7 @@
         }
 
         function updateProgressBar() {
-            const progressPercentage = (currentQuestionIndex / totalQuestions) * 100;
+            const progressPercentage = ((currentQuestionIndex + 1) / totalQuestions) * 100;
             document.getElementById('progress-bar-fill').style.width = progressPercentage + '%';
         }
 
@@ -236,18 +239,6 @@
             const message = document.createElement('p');
             message.innerText = messageText;
 
-            const qrCode = document.createElement('img');
-            qrCode.src = 'qrlinkedingrowe.png';
-            qrCode.alt = 'Código QR LinkedIn';
-            qrCode.style.marginTop = '20px';
-            qrCode.style.width = '100%';
-            qrCode.style.maxWidth = '250px';
-            qrCode.style.borderRadius = '20px';
-            qrCode.style.boxShadow = '0 4px 16px rgba(0, 0, 0, 0.5)';
-            qrCode.style.transition = 'transform 0.3s';
-            qrCode.onmouseover = () => qrCode.style.transform = 'scale(1.1)';
-            qrCode.onmouseout = () => qrCode.style.transform = 'scale(1)';
-
             const closeButton = document.createElement('button');
             closeButton.innerText = 'Cerrar';
             closeButton.className = 'button';
@@ -257,7 +248,6 @@
             };
 
             modalContent.appendChild(message);
-            modalContent.appendChild(qrCode);
             modalContent.appendChild(closeButton);
             modal.appendChild(modalContent);
             document.body.appendChild(modal);
