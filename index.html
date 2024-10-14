@@ -123,9 +123,6 @@
             <div id="result-graphic"></div>
             <p>¡Estás a un paso de llevar tu empresa al siguiente nivel!</p>
             <p>Escanea el código QR a continuación para visitar nuestro perfil de LinkedIn. Envía el código "Feria21" a nuestros mensajes de LinkedIn y gana un cupón para una auditoría gratuita.</p>
-            <div id="qr-placeholder">
-                <img src="qrlinkedingrowe.png" alt="Código QR LinkedIn">
-            </div>
             <button class="button" onclick="contactUs()">Saber Más</button>
         </div>
     </div>
@@ -240,7 +237,7 @@
             message.innerText = messageText;
 
             const qrCode = document.createElement('img');
-            qrCode.src = 'https://via.placeholder.com/200';
+            qrCode.src = 'qrlinkedingrowe.png';
             qrCode.alt = 'Código QR LinkedIn';
             qrCode.style.marginTop = '20px';
             qrCode.style.width = '100%';
